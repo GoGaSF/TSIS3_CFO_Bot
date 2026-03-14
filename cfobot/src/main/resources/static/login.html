@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CFO Bot Login</title>
+    <link rel="stylesheet" href="/login.css" />
+</head>
+<body>
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="logo">₿</div>
+            <h1>CFO Bot</h1>
+            <p>Cloud Economics Assistant</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button id="loginTab" class="tab-btn active" type="button">Login</button>
+            <button id="registerTab" class="tab-btn" type="button">Register</button>
+        </div>
+
+        <div id="authMessage" class="auth-message hidden"></div>
+
+        <form id="loginForm" class="auth-form">
+            <label>Email</label>
+            <input id="loginEmail" type="email" placeholder="demo@cfobot.com" required />
+
+            <label>Password</label>
+            <input id="loginPassword" type="password" placeholder="123456" required />
+
+            <button type="submit" class="primary-btn">Login</button>
+
+            <div class="demo-box">
+                <strong>Demo account</strong>
+                <p>Email: demo@cfobot.com</p>
+                <p>Password: 123456</p>
+            </div>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden">
+            <label>Name</label>
+            <input id="registerName" type="text" placeholder="Your name" required />
+
+            <label>Email</label>
+            <input id="registerEmail" type="email" placeholder="you@example.com" required />
+
+            <label>Password</label>
+            <input id="registerPassword" type="password" placeholder="At least 6 characters" required />
+
+            <button type="submit" class="primary-btn">Create account</button>
+        </form>
+    </div>
+</div>
+
+<script src="/login.js"></script>
+</body>
+</html>

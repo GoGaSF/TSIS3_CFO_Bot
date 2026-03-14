@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CFO Bot</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="brand-block">
+            <div class="brand-icon">₿</div>
+            <div>
+                <h2>CFO Bot</h2>
+                <p>Cloud Economics Assistant</p>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <span class="section-title">Workspace</span>
+            <button class="side-btn active" type="button">Chat Mode</button>
+            <button class="side-btn" type="button" id="showSummaryBtn">Summary View</button>
+        </div>
+
+        <div class="sidebar-section">
+            <span class="section-title">Quick Scenarios</span>
+            <button class="side-btn" id="startupExampleBtn" type="button">Startup</button>
+            <button class="side-btn" id="growthExampleBtn" type="button">Growth</button>
+            <button class="side-btn" id="scaleExampleBtn" type="button">Scale</button>
+        </div>
+
+        <div class="sidebar-section">
+            <span class="section-title">Actions</span>
+            <button class="side-btn" id="exampleBtn" type="button">Load Demo Example</button>
+            <button class="side-btn danger" id="resetBtn" type="button">Reset Chat</button>
+            <a class="side-link" href="/swagger-ui/index.html" target="_blank">Open Swagger</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h1>CFO Bot</h1>
+                <p>Estimate monthly cloud infrastructure costs in a chatbot experience</p>
+            </div>
+
+            <div class="topbar-actions">
+                <div class="user-badge" id="userBadge">Guest</div>
+                <button class="theme-btn" id="themeToggleBtn" type="button">Dark mode</button>
+                <button class="theme-btn" id="logoutBtn" type="button">Logout</button>
+            </div>
+        </header>
+
+        <section class="content-grid">
+            <div class="chat-panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Conversation</h3>
+                        <p>Enter your infrastructure assumptions and get a cost estimate.</p>
+                    </div>
+                    <span class="status-badge" id="botStatus">Bot online</span>
+                </div>
+
+                <div id="chatBox" class="chat-box">
+                    <div class="message bot">
+                        <div class="message-meta">CFO Bot</div>
+                        <pre>Hello! I am CFO Bot.
+I can estimate your monthly cloud cost for compute, storage, bandwidth, and database services.
+
+You can fill the form below or use one of the quick scenarios on the left.</pre>
+                    </div>
+                </div>
+
+                <div id="typingIndicator" class="typing-indicator hidden">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <div class="quick-actions">
+                    <button type="button" class="quick-chip" id="explainBtn">Explain estimate</button>
+                    <button type="button" class="quick-chip" id="cheaperBtn">Cheaper option</button>
+                    <button type="button" class="quick-chip" id="resendBtn">Recalculate</button>
+                    <button type="button" class="quick-chip" id="exportCsvBtn">Export CSV</button>
+                    <button type="button" class="quick-chip" id="pricingBtn">Pricing model</button>
+                </div>
+
+                <form id="chatForm" class="input-form">
+                    <div class="form-row">
+                        <label for="computeTier">Compute Tier</label>
+                        <select id="computeTier" name="computeTier">
+                            <option value="small">small</option>
+                            <option value="medium" selected>medium</option>
+                            <option value="large">large</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="computeHours">Compute Hours</label>
+                        <input id="computeHours" name="computeHours" type="number" min="0" max="744" step="0.01" required />
+                    </div>
+
+                    <div class="form-row">
+                        <label for="storageGb">Storage (GB)</label>
+                        <input id="storageGb" name="storageGb" type="number" min="0" step="0.01" required />
+                    </div>
+
+                    <div class="form-row">
+                        <label for="bandwidthGb">Bandwidth (GB)</label>
+                        <input id="bandwidthGb" name="bandwidthGb" type="number" min="0" step="0.01" required />
+                    </div>
+
+                    <div class="form-row">
+                        <label for="databaseTier">Database Tier</label>
+                        <select id="databaseTier" name="databaseTier">
+                            <option value="basic">basic</option>
+                            <option value="standard" selected>standard</option>
+                            <option value="premium">premium</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row full-width">
+                        <button id="sendBtn" type="submit" class="primary-btn">Send to CFO Bot</button>
+                    </div>
+                </form>
+            </div>
+
+            <aside class="summary-panel" id="summaryPanel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Estimate Summary</h3>
+                        <p>Live breakdown of your latest calculation.</p>
+                    </div>
+                </div>
+
+                <div class="summary-card total-card">
+                    <span class="summary-label">Estimated Monthly Total</span>
+                    <div class="total-value" id="totalValue">$0.00</div>
+                    <div class="summary-subtext" id="summarySubtext">No calculation yet</div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="cost-row">
+                        <span>Compute</span>
+                        <strong id="computeValue">$0.00</strong>
+                    </div>
+                    <div class="cost-row">
+                        <span>Storage</span>
+                        <strong id="storageValue">$0.00</strong>
+                    </div>
+                    <div class="cost-row">
+                        <span>Bandwidth</span>
+                        <strong id="bandwidthValue">$0.00</strong>
+                    </div>
+                    <div class="cost-row">
+                        <span>Database</span>
+                        <strong id="databaseValue">$0.00</strong>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <span class="summary-title">Recommendation</span>
+                    <p id="recommendationText">
+                        Run a calculation to see optimization suggestions.
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <span class="summary-title">Largest Cost Driver</span>
+                    <p id="driverText">
+                        Not available yet.
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <span class="summary-title">Selected Inputs</span>
+                    <div class="selected-grid">
+                        <div><span>Compute tier</span><strong id="selectedComputeTier">-</strong></div>
+                        <div><span>Database tier</span><strong id="selectedDatabaseTier">-</strong></div>
+                        <div><span>Hours</span><strong id="selectedHours">-</strong></div>
+                        <div><span>Storage</span><strong id="selectedStorage">-</strong></div>
+                        <div><span>Bandwidth</span><strong id="selectedBandwidth">-</strong></div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-title">Built-in Scenarios</span>
+                    <div id="scenariosList" class="mini-list">
+                        <div class="mini-empty">Scenarios will appear here.</div>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <span class="summary-title">Recent History</span>
+                    <div id="historyList" class="mini-list">
+                        <div class="mini-empty">No recent calculations yet.</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-title">Scenario Comparison</span>
+                    <div class="comparison-grid">
+                        <div class="comparison-box">
+                            <label for="compareScenario1">Scenario A</label>
+                            <select id="compareScenario1"></select>
+                        </div>
+                        <div class="comparison-box">
+                            <label for="compareScenario2">Scenario B</label>
+                            <select id="compareScenario2"></select>
+                        </div>
+                    </div>
+                    <button type="button" class="compare-btn" id="compareBtn">Compare scenarios</button>
+                    <div id="comparisonResult" class="comparison-result">
+                        Select two scenarios to compare.
+                    </div>
+                </div>
+            </aside>
+        </section>
+    </main>
+</div>
+
+<div class="modal-overlay hidden" id="pricingModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div>
+                <h3>Pricing Model</h3>
+                <p>Current pricing rules used by CFO Bot</p>
+            </div>
+            <button type="button" class="close-btn" id="closePricingModalBtn">×</button>
+        </div>
+
+        <div id="pricingContent" class="pricing-content">
+            <div class="mini-empty">Loading pricing model...</div>
+        </div>
+    </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
